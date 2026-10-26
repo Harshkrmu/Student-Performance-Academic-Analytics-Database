@@ -1,0 +1,36 @@
+{% extends "base.html" %}{% from "_risk.html" import badge, pct, avatar, icon %}
+{% block content %}
+{% set hi = levels.get('HIGH RISK',0) %}{% set mo = levels.get('MODERATE RISK',0) %}{% set sf = levels.get('SAFE',0) %}
+{% set tot = [hi+mo+sf,1]|max %}{% set a = hi/tot*100 %}{% set b = a + mo/tot*100 %}
+<div class="hero"><div>
+<small>Academic overview</small>
+<h2>{{ hi }} student{{ '' if hi==1 else 's' }} need{{ 's' if hi==1 }} immediate academic support</h2>
+<p>Attendance, examination results and assignment records are analysed together so that struggling students are identified early.</p>
+<div class="chips"><span>{{ stats.avg_att }}% avg attendance</span><span>{{ stats.avg_marks }}% avg marks</span><span>{{ mo }} moderate risk</span></div></div>
+<img src="{{ url_for('static', filename='hero.svg') }}" alt=""></div>
+<div class="grid">
+<div class="stat has-ic"><div class="ico c-blue">{{ icon('users') }}</div><div><b>{{ stats.students }}</b><span>Students enrolled</span></div></div>
+<div class="stat has-ic"><div class="ico c-violet">{{ icon('book') }}</div><div><b>{{ stats.subjects }}</b><span>Subjects</span></div></div>
+<div class="stat has-ic"><div class="ico c-gold">{{ icon('brief') }}</div><div><b>{{ stats.faculty }}</b><span>Faculty members</span></div></div>
+<div class="stat has-ic"><div class="ico c-green">{{ icon('check') }}</div><div><b>{{ stats.avg_att }}%</b><span>Average attendance</span></div></div>
+<div class="stat has-ic"><div class="ico c-red">{{ icon('trend') }}</div><div><b>{{ stats.avg_marks }}%</b><span>Average marks</span></div></div>
+</div>
+<div class="two">
+<div class="card"><h2>Risk distribution</h2>
+<div class="donut-wrap">
+<div class="donut" style="background:conic-gradient(var(--bad) 0 {{ a }}%, var(--warn) {{ a }}% {{ b }}%, var(--ok) {{ b }}% 100%)">
+<div><span><b>{{ tot }}</b>students</span></div></div>
+<div class="legend">
+<p><i style="background:var(--bad)"></i><b>{{ hi }}</b> High risk</p>
+<p><i style="background:var(--warn)"></i><b>{{ mo }}</b> Moderate risk</p>
+<p><i style="background:var(--ok)"></i><b>{{ sf }}</b> Safe</p></div></div></div>
+<div class="card"><h2>Average attendance by subject</h2><table>
+{% for s in subjects %}<tr><td>{{ s.subject_name }}<br><small style="color:var(--muted)">{{ s.faculty }}</small></td>
+<td>{{ pct(s.avg_att, 75) }}</td></tr>{% endfor %}</table></div>
+</div>
+<div class="card"><h2>Students needing academic support</h2>
+<table><tr><th>Student</th><th>Marks</th><th>Attendance</th><th>Status</th></tr>
+{% for r in high %}<tr><td>{{ avatar(r.name) }}<a href="{{ url_for('student_detail', sid=r.student_id) }}">{{ r.name }}</a></td>
+<td>{{ pct(r.marks_pct,50) }}</td><td>{{ pct(r.attendance_pct,75) }}</td><td>{{ badge(r.risk_level) }}</td></tr>
+{% else %}<tr><td colspan="4">No high-risk students.</td></tr>{% endfor %}</table></div>
+{% endblock %}

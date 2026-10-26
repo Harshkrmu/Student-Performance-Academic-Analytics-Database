@@ -1,0 +1,14 @@
+{% extends "base.html" %}{% from "_risk.html" import badge, pct, avatar %}
+{% block content %}
+<h1>At-risk students</h1><p class="sub">Students flagged by low attendance and low marks.</p>
+<div class="card"><h2>Risk analysis (view: v_risk_analysis)</h2><table>
+<tr><th>Name</th><th>Marks</th><th>Attendance</th><th>Score</th><th>Level</th></tr>
+{% for r in rows %}<tr><td>{{ avatar(r.name) }}<a href="{{ url_for('student_detail', sid=r.student_id) }}">{{ r.name }}</a></td>
+<td>{{ pct(r.marks_pct,50) }}</td><td>{{ pct(r.attendance_pct,75) }}</td><td>{{ r.risk_score }}</td><td>{{ badge(r.risk_level) }}</td></tr>
+{% endfor %}</table></div>
+<div class="card"><h2>Flags raised by the attendance trigger</h2><table>
+<tr><th>Student</th><th>Subject</th><th>Reason</th><th>When</th></tr>
+{% for f in flags %}<tr><td>{{ f.name }}</td><td>{{ f.subject_name }}</td><td>{{ f.reason }}</td><td>{{ f.flagged_on }}</td></tr>
+{% else %}<tr><td colspan="4">No flags yet. Record an absence on the Attendance page to see the trigger work.</td></tr>{% endfor %}
+</table></div>
+{% endblock %}

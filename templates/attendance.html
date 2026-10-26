@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Attendance</h1><p class="sub">Record classes and find students below the cutoff.</p>
+<div class="card"><h2>Record attendance</h2>
+<form class="inline" method="post">
+<label>Student<select name="student_id">{% for s in students %}<option value="{{ s.student_id }}">{{ s.name }}</option>{% endfor %}</select></label>
+<label>Subject<select name="subject_id">{% for s in subjects %}<option value="{{ s.subject_id }}">{{ s.subject_name }}</option>{% endfor %}</select></label>
+<label>Date<input type="date" name="class_date" required></label>
+<label>Status<select name="status"><option>Present</option><option>Absent</option></select></label>
+<button>Save</button></form></div>
+<div class="card"><h2>Low-attendance list (stored procedure sp_low_attendance)</h2>
+<form class="inline" method="get">
+<label>Subject<select name="subject_id">{% for s in subjects %}<option value="{{ s.subject_id }}" {{ 'selected' if s.subject_id==subject_id }}>{{ s.subject_name }}</option>{% endfor %}</select></label>
+<label>Cutoff %<input type="number" name="cutoff" value="{{ cutoff }}" step="1"></label>
+<button>Show</button></form>
+{% if subject_id %}<br><table><tr><th>ID</th><th>Student</th><th>Attendance</th></tr>
+{% for r in low %}<tr><td>{{ r.student_id }}</td><td><a href="{{ url_for('student_detail', sid=r.student_id) }}">{{ r.name }}</a></td><td class="low">{{ r.attendance_pct }}%</td></tr>
+{% else %}<tr><td colspan="3">Nobody below the cutoff.</td></tr>{% endfor %}</table>{% endif %}</div>
+{% endblock %}

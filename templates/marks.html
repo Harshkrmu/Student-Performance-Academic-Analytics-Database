@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Marks</h1><p class="sub">Enter exam marks and view the current ranking.</p>
+<div class="two">
+<div class="card"><h2>Enter / update marks</h2>
+<form class="inline" method="post">
+<label>Student<select name="student_id">{% for s in students %}<option value="{{ s.student_id }}">{{ s.name }}</option>{% endfor %}</select></label>
+<label>Exam<select name="exam_id">{% for e in exams %}<option value="{{ e.exam_id }}">{{ e.label }}</option>{% endfor %}</select></label>
+<label>Marks<input type="number" name="marks_obtained" min="0" required></label>
+<button>Save</button></form>
+<p style="color:var(--muted);font-size:13px">Marks above the exam maximum are rejected by a database trigger.</p></div>
+<div class="card"><h2>Top 10 by total marks (RANK)</h2><table>
+<tr><th>Rank</th><th>Student</th><th>Total</th></tr>
+{% for r in ranking %}<tr><td>{{ r.rnk }}</td><td>{{ r.name }}</td><td>{{ r.total_marks }}</td></tr>{% endfor %}</table></div>
+</div>
+{% endblock %}

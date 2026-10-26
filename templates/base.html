@@ -1,0 +1,30 @@
+{% from "_risk.html" import icon %}
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Student Analytics{% endblock %}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></head>
+<body>
+{% set ep = request.endpoint %}
+<aside>
+<div class="logo"><i>{{ icon('cap') }}</i><div><b>EduMetrics</b><small>Academic Analytics</small></div></div>
+<div class="navlabel">Overview</div>
+<a href="{{ url_for('dashboard') }}" class="{{ 'active' if ep=='dashboard' }}">{{ icon('grid') }}Dashboard</a>
+<a href="{{ url_for('students') }}" class="{{ 'active' if ep in ('students','student_detail','add_student') }}">{{ icon('users') }}Students</a>
+<a href="{{ url_for('at_risk') }}" class="{{ 'active' if ep=='at_risk' }}">{{ icon('alert') }}At-Risk</a>
+<div class="navlabel" style="margin-top:14px">Records</div>
+<a href="{{ url_for('attendance') }}" class="{{ 'active' if ep=='attendance' }}">{{ icon('check') }}Attendance</a>
+<a href="{{ url_for('marks') }}" class="{{ 'active' if ep=='marks' }}">{{ icon('edit') }}Marks</a>
+<a href="{{ url_for('assignments') }}" class="{{ 'active' if ep=='assignments' }}">{{ icon('list') }}Assignments</a>
+<div class="side-card"><b>Powered by MySQL</b>Views, triggers and stored procedures drive every insight shown here.</div>
+</aside>
+<div class="content">
+<div class="topbar"><div><b>Student Performance &amp; Academic Analytics</b></div>
+<div class="who">{{ today }} &nbsp;·&nbsp; Administrator <span>A</span></div></div>
+<main>
+{% with msgs = get_flashed_messages(with_categories=true) %}
+{% for cat, m in msgs %}<div class="flash {{ cat }}">{{ m }}</div>{% endfor %}{% endwith %}
+{% block content %}{% endblock %}
+</main></div></body></html>

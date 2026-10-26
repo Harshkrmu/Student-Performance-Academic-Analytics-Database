@@ -1,0 +1,24 @@
+{% extends "base.html" %}{% from "_risk.html" import badge, pct, avatar %}
+{% block content %}
+<h1>{{ avatar(s.name) }}{{ s.name }} &nbsp;{{ badge(risk.risk_level) if risk }}</h1><p class="sub">{{ s.email }}</p>
+<div class="grid">
+<div class="stat"><b>{{ s.cgpa }}</b><span>CGPA (10-point)</span></div>
+<div class="stat"><b>{{ risk.marks_pct if risk else '-' }}%</b><span>Overall marks</span></div>
+<div class="stat"><b>{{ risk.attendance_pct if risk else '-' }}%</b><span>Overall attendance</span></div>
+<div class="stat"><b>{{ s.semester }}</b><span>Semester · {{ s.department }}</span></div>
+</div>
+<div class="card"><h2>Subject-wise report</h2><table>
+<tr><th>Subject</th><th>Attendance</th><th>Marks</th></tr>
+{% for r in subjects %}<tr><td>{{ r.subject_name }}</td><td>{{ pct(r.attendance_pct,75) }}</td><td>{{ pct(r.marks_pct,40) }}</td></tr>{% endfor %}
+</table></div>
+<div class="two">
+<div class="card"><h2>Assignments</h2><table>
+<tr><th>Title</th><th>Due</th><th>Marks</th><th>Status</th></tr>
+{% for a in assignments %}<tr><td>{{ a.title }}</td><td>{{ a.due_date }}</td>
+<td>{{ a.marks_obtained if a.marks_obtained is not none else '-' }}/{{ a.max_marks }}</td>
+<td><span class="badge {{ a.status.replace(' ','') }}">{{ a.status }}</span></td></tr>{% endfor %}</table></div>
+<div class="card"><h2>Automatic risk flags (trigger)</h2><table>
+{% for f in flags %}<tr><td>{{ f.subject_name }}</td><td>{{ f.reason }}</td><td>{{ f.flagged_on }}</td></tr>
+{% else %}<tr><td>No flags.</td></tr>{% endfor %}</table></div>
+</div>
+{% endblock %}

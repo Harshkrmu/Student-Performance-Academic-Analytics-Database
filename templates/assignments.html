@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Assignments</h1><p class="sub">Pending and late submissions across all students.</p>
+<div class="card"><table>
+<tr><th>Student</th><th>Assignment</th><th>Due</th><th>Submitted</th><th>Status</th></tr>
+{% for r in rows %}<tr><td><a href="{{ url_for('student_detail', sid=r.student_id) }}">{{ r.name }}</a></td>
+<td>{{ r.title }}</td><td>{{ r.due_date }}</td><td>{{ r.submitted_date or '-' }}</td>
+<td><span class="badge {{ r.status }}">{{ r.status }}</span></td></tr>{% endfor %}</table></div>
+{% endblock %}
